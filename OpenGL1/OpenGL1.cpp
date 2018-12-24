@@ -4,9 +4,7 @@
 #include <sstream> 
 #include <iostream>
 #include <math.h> 
-#include <conio.h>
 #include <stdio.h>
-#include <windows.h>
 #include "GL/freeglut.h"
 
 #define VK_W 0x57
@@ -14,22 +12,22 @@
 
 int width = 800;
 int height = 600;
-int interval = 1000 / 144;
+int interval = 1000 / 60;
 int score_left = 0;
 int score_right = 0;
 int racket_width = 10;
-int racket_height = 80;
-int racket_speed = 3;
+int racket_height = 100;
+int racket_speed = 5;
 float racket_left_x = 10.0f;
-float racket_left_y = 50.0f;
-float racket_right_x = width - racket_width - 10;
-float racket_right_y = 50;
+float racket_left_y = (height / 2) - (racket_height / 2);
+float racket_right_x = width - (racket_width + 20);
+float racket_right_y = (height / 2) - (racket_height / 2);
 float ball_pos_x = width / 2;
 float ball_pos_y = height / 2;
 float ball_dir_x = -1.0f;
 float ball_dir_y = 0.0f;
-int ball_size = 8;
-int ball_speed = 2;
+int ball_size = 10;
+int ball_speed = 5;
 
 std::string int2str(int);
 void draw();
@@ -41,9 +39,9 @@ void vec2_norm(float&, float&);
 void drawText(float, float, std::string);
 void drawRect(float, float, float, float);
 
-int _tmain(int argc, char** argv)
+int _tmain(int argc, _TCHAR* argv)
 {
-	glutInit(&argc, argv);
+	glutInit(&argc, (char**)argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(width, height);
 	glutCreateWindow("OpenGL Pong");
@@ -73,7 +71,7 @@ void draw()
 	glutSwapBuffers();
 }
 
-void keyboard() 
+void keyboard()
 {
 	if (GetAsyncKeyState(VK_W)) racket_left_y += racket_speed;
 	if (GetAsyncKeyState(VK_S)) racket_left_y -= racket_speed;
@@ -89,7 +87,7 @@ void update(int value)
 	glutPostRedisplay();
 }
 
-void updateBall() 
+void updateBall()
 {
 	ball_pos_x += ball_dir_x * ball_speed;
 	ball_pos_y += ball_dir_y * ball_speed;
@@ -141,7 +139,7 @@ void updateBall()
 	vec2_norm(ball_dir_x, ball_dir_y);
 }
 
-void vec2_norm(float& x, float &y) 
+void vec2_norm(float& x, float &y)
 {
 	float length = sqrt((x * x) + (y * y));
 	if (length != 0.0f) {
@@ -167,7 +165,7 @@ void drawText(float x, float y, std::string text)
 	glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (const unsigned char*)text.c_str());
 }
 
-void drawRect(float x, float y, float width, float height) 
+void drawRect(float x, float y, float width, float height)
 {
 	glBegin(GL_QUADS);
 	glVertex2f(x, y);
