@@ -2,6 +2,7 @@
 A collection of retro games reimplemented in Open Graphics Library
 
 OpenGL1: Pong 1972 clone
+
 OpenGL2: [WIP]
 
 ## Installing OpenGL
