@@ -34,21 +34,21 @@ void draw();
 void keyboard();
 void update(int);
 void updateBall();
-void enable2D(int, int);
-void vec2_norm(float&, float&);
 void drawText(float, float, std::string);
 void drawRect(float, float, float, float);
 
-int _tmain(int argc, _TCHAR* argv)
+int _tmain(int argc, _TCHAR* argv[])
 {
 	glutInit(&argc, (char**)argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowSize(width, height);
 	glutCreateWindow("OpenGL Pong");
 	glutDisplayFunc(draw);
 	glutTimerFunc(interval, update, 0);
-	enable2D(width, height);
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	gluOrtho2D(0.0f, width, 0.0f, height);
+	glColor3ub(255, 255, 255);
 	glutMainLoop();
 	return 0;
 }
@@ -62,21 +62,24 @@ std::string int2str(int x)
 
 void draw()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	glClear(GL_COLOR_BUFFER_BIT);
 	drawRect(racket_left_x, racket_left_y, racket_width, racket_height);
 	drawRect(racket_right_x, racket_right_y, racket_width, racket_height);
 	drawRect(ball_pos_x - ball_size / 2, ball_pos_y - ball_size / 2, ball_size, ball_size);
-	drawText(width / 2 - 10, height - 30, int2str(score_left) + ":" + int2str(score_right));
+	drawText(width / 2 - 10, height - 50, int2str(score_left) + ":" + int2str(score_right));
 	glutSwapBuffers();
 }
 
 void keyboard()
 {
-	if (GetAsyncKeyState(VK_W)) racket_left_y += racket_speed;
-	if (GetAsyncKeyState(VK_S)) racket_left_y -= racket_speed;
-	if (GetAsyncKeyState(VK_UP)) racket_right_y += racket_speed;
-	if (GetAsyncKeyState(VK_DOWN)) racket_right_y -= racket_speed;
+	if (GetAsyncKeyState(VK_W))
+		if (racket_left_y <= (height - racket_height)) racket_left_y += racket_speed;
+	if (GetAsyncKeyState(VK_S))
+		if (racket_left_y >= 0)  racket_left_y -= racket_speed;
+	if (GetAsyncKeyState(VK_UP))
+		if (racket_right_y <= (height - racket_height)) racket_right_y += racket_speed;
+	if (GetAsyncKeyState(VK_DOWN))
+		if (racket_right_y >= 0) racket_right_y -= racket_speed;
 }
 
 void update(int value)
@@ -92,27 +95,24 @@ void updateBall()
 	ball_pos_x += ball_dir_x * ball_speed;
 	ball_pos_y += ball_dir_y * ball_speed;
 
-	if (ball_pos_x < racket_left_x + racket_width &&
-		ball_pos_x > racket_left_x &&
-		ball_pos_y < racket_left_y + racket_height &&
-		ball_pos_y > racket_left_y) {
-
+	if (ball_pos_x < racket_left_x + racket_width && ball_pos_x > racket_left_x &&
+		ball_pos_y < racket_left_y + racket_height && ball_pos_y > racket_left_y) 
+	{
 		float t = ((ball_pos_y - racket_left_y) / racket_height) - 0.5f;
 		ball_dir_x = fabs(ball_dir_x);
 		ball_dir_y = t;
 	}
 
-	if (ball_pos_x > racket_right_x &&
-		ball_pos_x < racket_right_x + racket_width &&
-		ball_pos_y < racket_right_y + racket_height &&
-		ball_pos_y > racket_right_y) {
-
+	if (ball_pos_x > racket_right_x && ball_pos_x < racket_right_x + racket_width &&
+		ball_pos_y < racket_right_y + racket_height && ball_pos_y > racket_right_y) 
+	{
 		float t = ((ball_pos_y - racket_right_y) / racket_height) - 0.5f;
 		ball_dir_x = -fabs(ball_dir_x);
 		ball_dir_y = t;
 	}
 
-	if (ball_pos_x < 0) {
+	if (ball_pos_x < 0) 
+	{
 		++score_right;
 		ball_pos_x = width / 2;
 		ball_pos_y = height / 2;
@@ -120,7 +120,8 @@ void updateBall()
 		ball_dir_y = 0;
 	}
 
-	if (ball_pos_x > width) {
+	if (ball_pos_x > width) 
+	{
 		++score_left;
 		ball_pos_x = width / 2;
 		ball_pos_y = height / 2;
@@ -128,41 +129,21 @@ void updateBall()
 		ball_dir_y = 0;
 	}
 
-	if (ball_pos_y > height) {
+	if (ball_pos_y > height) 
+	{
 		ball_dir_y = -fabs(ball_dir_y);
 	}
 
-	if (ball_pos_y < 0) {
+	if (ball_pos_y < 0) 
+	{
 		ball_dir_y = fabs(ball_dir_y);
 	}
-
-	vec2_norm(ball_dir_x, ball_dir_y);
-}
-
-void vec2_norm(float& x, float &y)
-{
-	float length = sqrt((x * x) + (y * y));
-	if (length != 0.0f) {
-		length = 1.0f / length;
-		x *= length;
-		y *= length;
-	}
-}
-
-void enable2D(int width, int height)
-{
-	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0.0f, width, 0.0f, height, 0.0f, 1.0f);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 }
 
 void drawText(float x, float y, std::string text)
 {
 	glRasterPos2f(x, y);
-	glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (const unsigned char*)text.c_str());
+	glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char*)text.c_str());
 }
 
 void drawRect(float x, float y, float width, float height)
