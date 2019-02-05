@@ -1,9 +1,5 @@
 # OpenGL Classic Games
-A collection of retro games reimplemented in Open Graphics Library
-
-OpenGL1: Pong 1972 clone
-
-OpenGL2: [WIP]
+A revision of Pong 1972 clone reimplemented in Open Graphics Library
 
 ## Installing OpenGL
 Download the content of GLUT32 folder and follow the steps below.
