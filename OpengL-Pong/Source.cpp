@@ -5,7 +5,7 @@
 #include <iostream>
 #include <math.h> 
 #include <stdio.h>
-#include "GL/freeglut.h"
+#include "freeglut.h"
 
 #define VK_W 0x57
 #define VK_S 0x53
