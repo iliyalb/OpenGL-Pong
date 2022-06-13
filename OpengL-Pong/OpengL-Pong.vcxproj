@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\OpenGL1\pch.cpp" />
+    <ClCompile Include="pch.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +138,7 @@
     <ClInclude Include="glu.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\OpenGL1\GL\freeglut.lib" />
+    <Library Include="freeglut.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
